@@ -5,6 +5,7 @@ export interface ApiResponseBody {
   campus: string;
   period: string;
   modality: string;
+  status: string;
 }
 
 export interface listProfessorClassesByIdServiceInput {

@@ -54,7 +54,7 @@ export const ClassesScreen: React.FC = () => {
                     modalidade: {classe.modality}
                   </Typography>
                   <Typography color="textSecondary">
-                    Status: 
+                    Status: {classe.status}
                   </Typography>
                 </CardContent>
               </Card>
