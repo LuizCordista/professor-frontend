@@ -12,8 +12,8 @@ export const sendStudentEvaluationService: SendStudentEvaluationService = async 
   const response = await axios.post(`${urlBase}/students/${studentId}/evaluation`, {
     aulasLecionadas,
     aulasAssistidas,
-    notaP1: notaP1,
-    notaP2: notaP2,
+    notaP1,
+    notaP2,
   });
   
   return response.data;
