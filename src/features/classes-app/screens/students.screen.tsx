@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Card, CardContent, CircularProgress, IconButton, Button } from '@mui/material';
+import { Box, Typography, Card, CardContent, CircularProgress, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useListStudentsFromClassById } from '../../../hooks/use-list-students-from-class-by-id/use-list-students-from-class-by-id.hook';
 import { StudentEvaluationDrawer } from '../components/student-evaluation-drawer/student-evaluation-drawer';
