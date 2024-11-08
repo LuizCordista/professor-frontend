@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UseSendStudentEvaluationProps } from './use-send-student-evaluation.types.ts';
+import { APIError, UseSendStudentEvaluationProps } from './use-send-student-evaluation.types.ts';
 import { sendStudentEvaluationService } from '../../services/send-student-evaluation/send-student-evaluation.service.ts';
 
 export const useSendStudentEvaluation = () => {
@@ -81,7 +81,12 @@ export const useSendStudentEvaluation = () => {
             return true;
 
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erro ao enviar avaliação');
+            const error = err as APIError;
+            setError(
+                error.response?.status === 400 
+                    ? error.response.data.message 
+                    : error.message
+            );
             return false;
         }
     };

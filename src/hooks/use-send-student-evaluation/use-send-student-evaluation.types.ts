@@ -4,4 +4,14 @@ export interface UseSendStudentEvaluationProps {
     status: string;
 }
 
+export interface APIError {
+    response?: {
+      status: number;
+      data: {
+        message: string;
+      };
+    };
+    message: string;
+  }
+
   
