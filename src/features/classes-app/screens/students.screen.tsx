@@ -71,7 +71,10 @@ export const StudentsScreen: React.FC = () => {
                 padding: '1rem'
               }}
             >
-              <Card sx={{ height: '100%', boxShadow: 3 }}>
+              <Card 
+                onClick={() => handleOpenDrawer(student)} 
+                sx={{ cursor: 'pointer', height: '100%', boxShadow: 3 }}
+              >
                 <CardContent>
                   <Typography variant="h5" component="h2">
                     {student.name}
@@ -92,9 +95,6 @@ export const StudentsScreen: React.FC = () => {
                       {student.status}
                     </Typography>
                   </Box>
-                  <Button onClick={() => handleOpenDrawer(student)}>
-                    Definir Notas e Frequência
-                  </Button>
                 </CardContent>
               </Card>
             </Box>
