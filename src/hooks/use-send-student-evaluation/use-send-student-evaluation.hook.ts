@@ -19,25 +19,13 @@ export const useSendStudentEvaluation = () => {
     };
 
     const handleCloseDrawer = () => {
+        setAulasLecionadas('');
+        setAulasAssistidas('');
+        setNotaP1('');
+        setNotaP2('');
+        setError(null);
         setDrawerOpen(false);
         setSelectedStudent(null);
-    };
-
-    const handleNumberInput = (
-        value: string,
-        setter: (value: string) => void,
-        allowDecimals: boolean = false
-    ) => {
-        if (!allowDecimals) {
-            const numberValue = value.replace(/\D/g, '');
-            setter(numberValue);
-            return;
-        }
-
-        const numberValue = value.replace(/[^\d.]/g, '');
-        if (numberValue === '' || /^\d*\.?\d*$/.test(numberValue)) {
-            setter(numberValue);
-        }
     };
 
     const handleSubmit = async (student: UseSendStudentEvaluationProps) => {
@@ -104,7 +92,6 @@ export const useSendStudentEvaluation = () => {
         setNotaP2,
         handleOpenDrawer,
         handleCloseDrawer,
-        handleNumberInput,
         handleSubmit,
         error
     };

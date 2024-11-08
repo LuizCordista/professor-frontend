@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, Card, CardContent, CircularProgress, IconButton, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useListStudentsFromClassById } from '../../../hooks/use-list-students-from-class-by-id/use-list-students-from-class-by-id.hook';
-import { StudentEvaluationDrawer } from '../components/student-evaluation-drawer/student-evaluation-drawer.tsx';
-import { useSendStudentEvaluation } from '../../../hooks/use-send-student-evaluation/use-send-student-evaluation.hook.ts';
+import { StudentEvaluationDrawer } from '../components/student-evaluation-drawer/student-evaluation-drawer';
+import { useSendStudentEvaluation } from '../../../hooks/use-send-student-evaluation/use-send-student-evaluation.hook';
+import { getStudentsStatusColor } from '../../../utils/status-color';
 
 export const StudentsScreen: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
@@ -16,15 +17,28 @@ export const StudentsScreen: React.FC = () => {
     drawerOpen,
     handleOpenDrawer,
     handleCloseDrawer,
+    aulasLecionadas,
+    setAulasLecionadas,
+    aulasAssistidas,
+    setAulasAssistidas,
+    notaP1,
+    setNotaP1,
+    notaP2,
+    setNotaP2,
+    handleSubmit,
+    error: evaluationError
   } = useSendStudentEvaluation();
 
-  const handleEvaluationSubmitted = async () => {
-    await refetch();
-    handleCloseDrawer();
+  const handleEvaluationSubmit = async () => {
+    const success = await handleSubmit(selectedStudent!);
+    if (success) {
+      await refetch();
+      handleCloseDrawer();
+    }
   };
 
   const handleBackClick = () => {
-    navigate('/'); 
+    navigate('/');
   };
 
   return (
@@ -65,11 +79,21 @@ export const StudentsScreen: React.FC = () => {
                   <Typography color="textSecondary">
                     RA: {student.id}
                   </Typography>
-                  <Typography color="textSecondary">
-                    Status: {student.status}
-                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    <Typography color="textSecondary">
+                      Status:
+                    </Typography>
+                    <Typography 
+                      sx={{ 
+                        color: getStudentsStatusColor(student.status),
+                        fontWeight: 'medium'
+                      }}
+                    >
+                      {student.status}
+                    </Typography>
+                  </Box>
                   <Button onClick={() => handleOpenDrawer(student)}>
-                    Ver Notas e Frequência
+                    Definir Notas e Frequência
                   </Button>
                 </CardContent>
               </Card>
@@ -83,7 +107,16 @@ export const StudentsScreen: React.FC = () => {
         open={drawerOpen}
         onClose={handleCloseDrawer}
         student={selectedStudent}
-        onSubmitted={handleEvaluationSubmitted}
+        aulasLecionadas={aulasLecionadas}
+        setAulasLecionadas={setAulasLecionadas}
+        aulasAssistidas={aulasAssistidas}
+        setAulasAssistidas={setAulasAssistidas}
+        notaP1={notaP1}
+        setNotaP1={setNotaP1}
+        notaP2={notaP2}
+        setNotaP2={setNotaP2}
+        onSubmit={handleEvaluationSubmit}
+        error={evaluationError}
       />
     </Box>
   );

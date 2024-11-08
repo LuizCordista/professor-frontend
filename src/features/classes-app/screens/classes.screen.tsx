@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { useListProfessorClassesById } from '../../../hooks/use-list-professor-classes-by-id/use-list-professor-classes-by-id.hook';
 import { useNavigate } from 'react-router-dom';
+import { getClassesStatusColor } from '../../../utils/status-color';
 
 export const ClassesScreen: React.FC = () => {
   
@@ -53,9 +54,19 @@ export const ClassesScreen: React.FC = () => {
                   <Typography color="textSecondary">
                     modalidade: {classe.modality}
                   </Typography>
-                  <Typography color="textSecondary">
-                    Status: {classe.status}
-                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    <Typography color="textSecondary">
+                      Status:
+                    </Typography>
+                    <Typography 
+                      sx={{ 
+                        color: getClassesStatusColor(classe.status),
+                        fontWeight: 'medium'
+                      }}
+                    >
+                      {classe.status}
+                    </Typography>
+                  </Box>
                 </CardContent>
               </Card>
             </Box>

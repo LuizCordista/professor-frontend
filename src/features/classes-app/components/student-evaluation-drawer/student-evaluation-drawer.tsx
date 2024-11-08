@@ -1,40 +1,41 @@
 import React from 'react';
 import { Drawer, Box, Typography, IconButton, Button, Input } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useSendStudentEvaluation } from '../../../../hooks/use-send-student-evaluation/use-send-student-evaluation.hook.ts';
+import { getStudentsStatusColor } from '../../../../utils/status-color';
+import { handleNumberInput } from '../../../../utils/handle-number-input';
 
 interface StudentEvaluationDrawerProps {
   open: boolean;
   onClose: () => void;
   student: any;
-  onSubmitted: () => Promise<void>;
+  aulasLecionadas: string;
+  setAulasLecionadas: (value: string) => void;
+  aulasAssistidas: string;
+  setAulasAssistidas: (value: string) => void;
+  notaP1: string;
+  setNotaP1: (value: string) => void;
+  notaP2: string;
+  setNotaP2: (value: string) => void;
+  onSubmit: () => Promise<void>;
+  error: string | null;
 }
 
-export const StudentEvaluationDrawer: React.FC<StudentEvaluationDrawerProps> = ({ open, onClose, student, onSubmitted }) => {
-
-  const {
-    aulasLecionadas,
-    setAulasLecionadas,
-    aulasAssistidas,
-    setAulasAssistidas,
-    notaP1,
-    setNotaP1,
-    notaP2,
-    setNotaP2,
-    handleNumberInput,
-    handleSubmit,
-    error
-  } = useSendStudentEvaluation();
-
+export const StudentEvaluationDrawer: React.FC<StudentEvaluationDrawerProps> = ({
+  open,
+  onClose,
+  student,
+  aulasLecionadas,
+  setAulasLecionadas,
+  aulasAssistidas,
+  setAulasAssistidas,
+  notaP1,
+  setNotaP1,
+  notaP2,
+  setNotaP2,
+  onSubmit,
+  error
+}) => {
   if (!student) return null;
-
-  const handleEvaluationSubmit = async () => {
-    const success = await handleSubmit(student);
-    if (success) {
-      await onSubmitted();
-    }
-  };
-
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
@@ -51,15 +52,24 @@ export const StudentEvaluationDrawer: React.FC<StudentEvaluationDrawerProps> = (
         <Typography color="textSecondary">
           RA: {student.id}
         </Typography>
-        <Typography color="textSecondary">
-          Status: {student.status}
-        </Typography>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Typography color="textSecondary">
+            Status:
+          </Typography>
+          <Typography 
+            sx={{ 
+              color: getStudentsStatusColor(student.status),
+              fontWeight: 'medium'
+            }}
+            >
+            {student.status}
+          </Typography>
+        </Box>
         <Typography variant="caption" sx={{ mb: 1 }}>Aulas Lecionadas</Typography>
         <Input
           type="text"
           value={aulasLecionadas}
           onChange={(e) => handleNumberInput(e.target.value, setAulasLecionadas, false)}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           fullWidth
           sx={{ mb: 2 }}
         />
@@ -69,33 +79,24 @@ export const StudentEvaluationDrawer: React.FC<StudentEvaluationDrawerProps> = (
           type="text"
           value={aulasAssistidas}
           onChange={(e) => handleNumberInput(e.target.value, setAulasAssistidas, false)}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           fullWidth
           sx={{ mb: 2 }}
         />
 
         <Typography variant="caption" sx={{ mb: 1 }}>Nota da P1</Typography>
         <Input
-          type="number"
+          type="text"
           value={notaP1}
           onChange={(e) => handleNumberInput(e.target.value, setNotaP1, true)}
-          inputProps={{ 
-            inputMode: 'decimal',
-            step: 'any',
-          }}
           fullWidth
           sx={{ mb: 2 }}
         />
 
         <Typography variant="caption" sx={{ mb: 1 }}>Nota da P2</Typography>
         <Input
-          type="number"
+          type="text"
           value={notaP2}
           onChange={(e) => handleNumberInput(e.target.value, setNotaP2, true)}
-          inputProps={{ 
-            inputMode: 'decimal',
-            step: 'any',
-          }}
           fullWidth
           sx={{ mb: 2 }}
         />
@@ -106,7 +107,7 @@ export const StudentEvaluationDrawer: React.FC<StudentEvaluationDrawerProps> = (
           </Typography>
         )}
         
-        <Button variant="contained" color="primary" onClick={handleEvaluationSubmit} fullWidth>
+        <Button variant="contained" color="primary" onClick={onSubmit} fullWidth>
           Lançar Notas e Frequência
         </Button>
       </Box>
