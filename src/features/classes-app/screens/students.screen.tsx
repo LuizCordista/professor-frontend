@@ -1,13 +1,27 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Card, CardContent, CircularProgress, IconButton } from '@mui/material';
+import { Box, Typography, Card, CardContent, CircularProgress, IconButton, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useListStudentsFromClassById } from '../../../hooks/use-list-students-from-class-by-id/use-list-students-from-class-by-id.hook';
+import { StudentEvaluationDrawer } from '../components/student-evaluation-drawer/student-evaluation-drawer.tsx';
+import { useSendStudentEvaluation } from '../../../hooks/use-send-student-evaluation/use-send-student-evaluation.hook.ts';
 
 export const StudentsScreen: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
-  const { result: studentsInfo, loading, error } = useListStudentsFromClassById({ classId: classId! });
+  const { result: studentsInfo, loading, error, refetch } = useListStudentsFromClassById({ classId: classId! });
+  
+  const {
+    selectedStudent,
+    drawerOpen,
+    handleOpenDrawer,
+    handleCloseDrawer,
+  } = useSendStudentEvaluation();
+
+  const handleEvaluationSubmitted = async () => {
+    await refetch();
+    handleCloseDrawer();
+  };
 
   const handleBackClick = () => {
     navigate('/'); 
@@ -54,6 +68,9 @@ export const StudentsScreen: React.FC = () => {
                   <Typography color="textSecondary">
                     Status: {student.status}
                   </Typography>
+                  <Button onClick={() => handleOpenDrawer(student)}>
+                    Ver Notas e Frequência
+                  </Button>
                 </CardContent>
               </Card>
             </Box>
@@ -62,6 +79,12 @@ export const StudentsScreen: React.FC = () => {
       ) : (
         !loading && <Typography>Nenhum aluno encontrado.</Typography>
       )}
+      <StudentEvaluationDrawer
+        open={drawerOpen}
+        onClose={handleCloseDrawer}
+        student={selectedStudent}
+        onSubmitted={handleEvaluationSubmitted}
+      />
     </Box>
   );
 };
